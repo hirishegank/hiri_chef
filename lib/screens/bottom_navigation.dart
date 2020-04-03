@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:user/screens/home_page.dart';
+import 'package:user/screens/profile_creation.dart';
+import 'package:user/screens/profile_page.dart';
 
 import 'cart_items.dart';
+import 'orders_page.dart';
 
 class BottomNavigation extends StatefulWidget {
   BottomNavigation({Key key}) : super(key: key);
@@ -18,18 +21,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
   static List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     CartPage(),
-    Center(
-      child: Text(
-        'Orders',
-        style: optionStyle,
-      ),
-    ),
-    Center(
-      child: Text(
-        'Profile',
-        style: optionStyle,
-      ),
-    ),
+    OrdrersPage(),
+    ViewProfilePage()
   ];
 
   void _onItemTapped(int index) {

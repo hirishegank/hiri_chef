@@ -38,10 +38,30 @@ class _ScanPageState extends State<ScanPage> {
         centerTitle: true,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: MaterialButton(onPressed: scan, child: new Text("Scan")),
-        padding: const EdgeInsets.all(8.0),
-      ),
+      body: MaterialButton(
+          onPressed: scan,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Image.asset('assets/img/qrDisplay.png'),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    'Scan here to complete\nyour food delivery',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  )
+                ],
+              )),
+            ],
+          )),
     );
   }
 }

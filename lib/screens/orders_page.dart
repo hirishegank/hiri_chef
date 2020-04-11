@@ -84,7 +84,7 @@ class DashboardCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text('Total Orders'),
-                Text('${totalOrders}'),
+                Text('$totalOrders'),
               ],
             ),
             SizedBox(
@@ -94,7 +94,7 @@ class DashboardCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text('Accpted Orders'),
-                Text('${accptedOrders}'),
+                Text('$accptedOrders'),
               ],
             ),
             SizedBox(
@@ -104,7 +104,7 @@ class DashboardCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text('Declined Orders'),
-                Text('${declinesOrders}'),
+                Text('$declinesOrders'),
               ],
             ),
             SizedBox(

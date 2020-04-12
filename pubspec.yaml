@@ -28,6 +28,11 @@ dependencies:
   flutter_rating_bar: ^3.0.1+1
   barcode_scan: ^2.0.1
   rflutter_alert: ^1.0.3
+  firebase_auth: ^0.15.5+3
+  firebase_core: ^0.4.4+3
+  cloud_firestore: ^0.13.4+2
+  firebase_storage: ^3.1.5
+  file_picker: ^1.6.2
 
 dev_dependencies:
   flutter_test:

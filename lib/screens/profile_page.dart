@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/fa_icon.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,6 +15,17 @@ class ViewProfilePage extends StatefulWidget {
 
 class _ViewProfilePageState extends State<ViewProfilePage> {
   bool isUserActive = false;
+
+  Future<void> _logout() async {
+    /// Method to Logout the `FirebaseUser` (`_firebaseUser`)
+    try {
+      // signout code
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,8 +96,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
         ProfileContentCard(
           icon: FaIcon(FontAwesomeIcons.signOutAlt),
           lable: 'Logout',
-          onTap: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => Walkthrough())),
+          onTap: () {
+            _logout();
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => Walkthrough()));
+          },
         ),
       ],
     ));

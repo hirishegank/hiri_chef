@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:user/screens/food_confirm_order.dart';
 // import 'package:user/components/best_food_card.dart';
@@ -13,7 +15,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String searchText;
+  FirebaseUser _firebaseUser;
+  String userName = '';
+
+  void getCurrentUser() async {
+    _firebaseUser = await FirebaseAuth.instance.currentUser();
+    final userDetails = await Firestore.instance
+        .collection('chef')
+        .document(_firebaseUser.uid)
+        .get();
+    setState(() {
+      userName = userDetails['name'];
+    });
+  }
+
+  @override
+  void initState() {
+    getCurrentUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -52,7 +73,7 @@ class _HomePageState extends State<HomePage> {
             child: Padding(
               padding: const EdgeInsets.only(left: 20.0),
               child: Text(
-                'Hello cook Kabali !',
+                'Hello cook $userName !',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),

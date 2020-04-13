@@ -83,123 +83,109 @@ class _HomePageState extends State<HomePage> {
         body: SafeArea(
           child: TabBarView(
             children: [
-              ListView(
-                children: <Widget>[
-                  CardItem(
-                    isPast: true,
-                    onGoingCall: () =>
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => OrderConfirmPage(
-                                  isPast: true,
-                                ))),
-                  ),
-                  CardItem(
-                    isPast: true,
-                    onGoingCall: () =>
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => OrderConfirmPage(
-                                  isPast: true,
-                                ))),
-                  ),
-                  CardItem(
-                    isPast: true,
-                    onGoingCall: () =>
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => OrderConfirmPage(
-                                  isPast: true,
-                                ))),
-                  ),
-                  CardItem(
-                    isPast: true,
-                    onGoingCall: () =>
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => OrderConfirmPage(
-                                  isPast: true,
-                                ))),
-                  ),
-                  CardItem(
-                    isPast: true,
-                    onGoingCall: () =>
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => OrderConfirmPage(
-                                  isPast: true,
-                                ))),
-                  ),
-                ],
-              ),
-              ListView(
-                children: [
-                  CardItem(
-                    onGoingCall: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => OrderConfirmPage(
-                          isPast: false,
-                        ),
-                      ),
+              _firebaseUser != null
+                  ? StreamBuilder(
+                      builder: (context, snapShot) {
+                        if (!snapShot.hasData) return Text('Loading...');
+                        return ListView.builder(
+                            itemCount: snapShot.data.documents.length,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot ds =
+                                  snapShot.data.documents[index];
+
+                              return CardItem(
+                                isPast: true,
+                                foodName: ds['food_name'],
+                                price: ds['unit_price'].toDouble(),
+                                quantity: ds['quantity'],
+                                onGoingCall: () => Navigator.of(context)
+                                    .push(MaterialPageRoute(
+                                        builder: (context) => OrderConfirmPage(
+                                              isPast: true,
+                                            ))),
+                              );
+                            });
+                      },
+                      stream: Firestore.instance
+                          .collection('orders')
+                          .where('chef_id', isEqualTo: _firebaseUser.uid)
+                          .where('status', isEqualTo: 'past')
+                          .snapshots(),
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
-                  CardItem(
-                    onGoingCall: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => OrderConfirmPage(
-                          isPast: false,
-                        ),
-                      ),
+
+              //Onging cards
+              _firebaseUser != null
+                  ? StreamBuilder(
+                      builder: (context, snapShot) {
+                        if (!snapShot.hasData) return Text('Loading...');
+
+                        return ListView.builder(
+                            itemCount: snapShot.data.documents.length,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot ds =
+                                  snapShot.data.documents[index];
+                              return CardItem(
+                                foodName: ds['food_name'],
+                                price: ds['unit_price'].toDouble(),
+                                quantity: ds['quantity'],
+                                onGoingCall: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => OrderConfirmPage(
+                                      isPast: false,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            });
+                      },
+                      stream: Firestore.instance
+                          .collection('orders')
+                          .where('chef_id', isEqualTo: _firebaseUser.uid)
+                          .where('status', isEqualTo: 'on_going')
+                          .snapshots(),
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
-                  CardItem(
-                    onGoingCall: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => OrderConfirmPage(
-                          isPast: false,
-                        ),
-                      ),
+
+              //pendig cards
+              _firebaseUser != null
+                  ? StreamBuilder(
+                      builder: (context, snapShot) {
+                        if (!snapShot.hasData) return Text('Loading...');
+                        return ListView.builder(
+                            itemCount: snapShot.data.documents.length,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot ds =
+                                  snapShot.data.documents[index];
+                              return CardItem(
+                                foodName: ds['food_name'],
+                                price: ds['unit_price'].toDouble(),
+                                quantity: ds['quantity'],
+                                isPending: true,
+                                onDecline: () => Firestore.instance
+                                    .collection('orders')
+                                    .document(ds.documentID)
+                                    .updateData({'status': 'declined'}),
+                                onAccpet: () => Firestore.instance
+                                    .collection('orders')
+                                    .document(ds.documentID)
+                                    .updateData({'status': 'on_going'}),
+                              );
+                            });
+                      },
+                      stream: Firestore.instance
+                          .collection('orders')
+                          .where('chef_id', isEqualTo: _firebaseUser.uid)
+                          .where('status', isEqualTo: 'pending')
+                          .snapshots(),
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
-                  CardItem(
-                    onGoingCall: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => OrderConfirmPage(
-                          isPast: false,
-                        ),
-                      ),
-                    ),
-                  ),
-                  CardItem(
-                    onGoingCall: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => OrderConfirmPage(
-                          isPast: false,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              ListView(
-                children: [
-                  CardItem(
-                    isPending: true,
-                    onAccpet: () => print('accept'),
-                    onDecline: () => print('decline'),
-                  ),
-                  CardItem(
-                    isPending: true,
-                    onAccpet: () => print('accept'),
-                    onDecline: () => print('decline'),
-                  ),
-                  CardItem(
-                    isPending: true,
-                    onAccpet: () => print('accept'),
-                    onDecline: () => print('decline'),
-                  ),
-                  CardItem(
-                    isPending: true,
-                    onAccpet: () => print('accept'),
-                    onDecline: () => print('decline'),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
@@ -214,8 +200,14 @@ class CardItem extends StatelessWidget {
   final Function onDecline;
   final Function onAccpet;
   final Function onGoingCall;
+  final double price;
+  final int quantity;
+  final String foodName;
   const CardItem(
       {Key key,
+      this.foodName = '',
+      this.price = 0.0,
+      this.quantity = 0,
       this.isPending = false,
       this.onDecline,
       this.onAccpet,
@@ -256,7 +248,7 @@ class CardItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'Food Name',
+                          this.foodName,
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
@@ -271,7 +263,7 @@ class CardItem extends StatelessWidget {
                               style: TextStyle(fontSize: 15),
                             ),
                             Text(
-                              'LKR 3000.00',
+                              'LKR ${this.price.toStringAsFixed(2)}',
                               style: TextStyle(fontSize: 15),
                             )
                           ],
@@ -287,7 +279,7 @@ class CardItem extends StatelessWidget {
                               style: TextStyle(fontSize: 15),
                             ),
                             Text(
-                              '3',
+                              '$quantity',
                               style: TextStyle(fontSize: 15),
                             )
                           ],

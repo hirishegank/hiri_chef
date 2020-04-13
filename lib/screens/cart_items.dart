@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:user/screens/add_food.dart';
@@ -18,6 +21,20 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   double total;
+
+  FirebaseUser _firebaseUser;
+
+  void getCurrentUser() async {
+    _firebaseUser = await FirebaseAuth.instance.currentUser();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getCurrentUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,32 +54,36 @@ class _CartPageState extends State<CartPage> {
       body: SafeArea(
         child: ListView(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Wrap(
-                alignment: WrapAlignment.spaceBetween,
-                children: <Widget>[
-                  MenuCard(
+            StreamBuilder(
+              builder: (context, snapShot) {
+                if (!snapShot.hasData) return Text('No Data');
+                List<MenuCard> menuCard = [];
+                menuCard = snapShot.data.documents.map<MenuCard>((f) {
+                  return MenuCard(
+                      imgUrl: f['imgUrl'],
+                      foodName: f['food_name'],
+                      rating: f['rating'],
+                      numberOfRating: f['number_of_rating'],
+                      price: f['price'].toDouble(),
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => MenuDetailsPage()))),
-                  MenuCard(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => MenuDetailsPage()))),
-                  MenuCard(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => MenuDetailsPage()))),
-                  MenuCard(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => MenuDetailsPage()))),
-                  MenuCard(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => MenuDetailsPage()))),
-                  MenuCard(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => MenuDetailsPage()))),
-                ],
-              ),
-            )
+                          builder: (context) => MenuDetailsPage(
+                                primaryKey: f.documentID,
+                              ))));
+                }).toList();
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      children: menuCard),
+                );
+              },
+              stream: _firebaseUser != null
+                  ? Firestore.instance
+                      .collection("food")
+                      .where('chef_id', isEqualTo: _firebaseUser.uid)
+                      .snapshots()
+                  : Stream.empty(),
+            ),
           ],
         ),
       ),
@@ -72,7 +93,30 @@ class _CartPageState extends State<CartPage> {
 
 class MenuCard extends StatelessWidget {
   final Function onTap;
-  const MenuCard({Key key, this.onTap}) : super(key: key);
+  final String imgUrl;
+  final String foodName;
+  final double rating;
+  final int numberOfRating;
+
+  final double price;
+
+  const MenuCard(
+      {Key key,
+      this.onTap,
+      this.imgUrl,
+      this.foodName,
+      this.rating,
+      this.numberOfRating,
+      this.price})
+      : super(key: key);
+
+  Future<String> getImageUrl() async {
+    // print(imgUrl);
+    String url;
+    url = await FirebaseStorage.instance.ref().child(imgUrl).getDownloadURL();
+
+    return url;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,17 +130,25 @@ class MenuCard extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Image.asset(
-                'assets/img/walk1.png',
-                width: (MediaQuery.of(context).size.width - 120) / 2,
-                height: (MediaQuery.of(context).size.width - 120) / 2 - 10,
-                fit: BoxFit.cover,
-              ),
+              child: FutureBuilder(
+                  future: getImageUrl(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.hasData) {
+                      return Image.network(
+                        snapshot.data,
+                        width: MediaQuery.of(context).size.width,
+                        height: 130,
+                        fit: BoxFit.cover,
+                      );
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  }),
             ),
             Padding(
               padding: EdgeInsets.all(10),
               child: Text(
-                'Food Name',
+                this.foodName,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
@@ -106,11 +158,11 @@ class MenuCard extends StatelessWidget {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: <Widget>[
                   Text(
-                    '4.1',
+                    'LKR ${price.toStringAsFixed(2)}',
                     style: TextStyle(fontSize: 15, color: Colors.grey),
                   ),
                   RatingBarIndicator(
-                    rating: 4.1,
+                    rating: rating,
                     direction: Axis.horizontal,
                     itemCount: 5,
                     itemSize: 12,
@@ -122,7 +174,7 @@ class MenuCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '(200)',
+                    '($numberOfRating)',
                     style: TextStyle(fontSize: 15, color: Colors.grey),
                   )
                 ],

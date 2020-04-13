@@ -141,7 +141,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
                             )
                           : Image.asset(
                               fileLocation,
-                              fit: BoxFit.fitHeight,
+                              fit: BoxFit.fitWidth,
                             )),
                 ),
               ),
@@ -246,12 +246,12 @@ class _AddFoodPageState extends State<AddFoodPage> {
                         color: Colors.green,
                       ),
                       onPressed: () {
-                        ingController.text = '';
-                        if (ing != '')
+                        if (ing != '' && ingController.text != '')
                           setState(() {
                             ingredients.add(ing);
                             ing = '';
                           });
+                        ingController.text = '';
                       },
                     ),
                   ),

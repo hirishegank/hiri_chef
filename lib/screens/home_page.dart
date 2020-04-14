@@ -93,12 +93,12 @@ class _HomePageState extends State<HomePage> {
                               return CardItem(
                                 isPast: true,
                                 foodId: ds['food_id'],
-                                price: ds['unit_price'].toDouble(),
                                 quantity: ds['quantity'],
                                 onGoingCall: () => Navigator.of(context)
                                     .push(MaterialPageRoute(
                                         builder: (context) => OrderConfirmPage(
                                               isPast: true,
+                                              orderId: ds.documentID,
                                             ))),
                               );
                             });
@@ -126,11 +126,11 @@ class _HomePageState extends State<HomePage> {
                                   snapShot.data.documents[index];
                               return CardItem(
                                 foodId: ds['food_id'],
-                                price: ds['unit_price'].toDouble(),
                                 quantity: ds['quantity'],
                                 onGoingCall: () => Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) => OrderConfirmPage(
+                                      orderId: ds.documentID,
                                       isPast: false,
                                     ),
                                   ),
@@ -160,7 +160,6 @@ class _HomePageState extends State<HomePage> {
                                   snapShot.data.documents[index];
                               return CardItem(
                                 foodId: ds['food_id'],
-                                price: ds['unit_price'].toDouble(),
                                 quantity: ds['quantity'],
                                 isPending: true,
                                 onDecline: () => Firestore.instance
@@ -197,13 +196,13 @@ class CardItem extends StatelessWidget {
   final Function onDecline;
   final Function onAccpet;
   final Function onGoingCall;
-  final double price;
+  //final double price;
   final int quantity;
   final String foodId;
   const CardItem(
       {Key key,
       this.foodId = '',
-      this.price = 0.0,
+      //this.price = 0.0,
       this.quantity = 0,
       this.isPending = false,
       this.onDecline,
@@ -267,59 +266,63 @@ class CardItem extends StatelessWidget {
                           ));
                     }),
                 Expanded(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        FutureBuilder(
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) return Text('Loding..');
-                            return Text(
-                              snapshot.data['food_name'],
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            );
-                          },
-                          future: Firestore.instance
-                              .collection('food')
-                              .document(this.foodId)
-                              .get(),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              'Unit price',
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            Text(
-                              'LKR ${this.price.toStringAsFixed(2)}',
-                              style: TextStyle(fontSize: 15),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              'Qunatity',
-                              style: TextStyle(fontSize: 15),
-                            ),
-                            Text(
-                              '$quantity',
-                              style: TextStyle(fontSize: 15),
-                            )
-                          ],
-                        ),
-                      ]),
-                ))
+                  child: FutureBuilder(
+                    future: Firestore.instance
+                        .collection('food')
+                        .document(this.foodId)
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) return Text('Loding..');
+
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                snapshot.data['food_name'],
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    'Unit price',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  Text(
+                                    'LKR ${snapshot.data['price'].toStringAsFixed(2)}',
+                                    style: TextStyle(fontSize: 15),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    'Qunatity',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  Text(
+                                    '$quantity',
+                                    style: TextStyle(fontSize: 15),
+                                  )
+                                ],
+                              ),
+                            ]),
+                      );
+                    },
+                  ),
+                )
               ],
             ),
             SizedBox(

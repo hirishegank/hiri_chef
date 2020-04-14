@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:user/screens/food_confirm_order.dart';
-// import 'package:user/components/best_food_card.dart';
-// import 'package:user/components/home_category_buttom.dart';
-// import 'package:user/components/popular_food_card.dart';
-// import 'package:user/constants.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -95,7 +92,7 @@ class _HomePageState extends State<HomePage> {
 
                               return CardItem(
                                 isPast: true,
-                                foodName: ds['food_name'],
+                                foodId: ds['food_id'],
                                 price: ds['unit_price'].toDouble(),
                                 quantity: ds['quantity'],
                                 onGoingCall: () => Navigator.of(context)
@@ -128,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                               DocumentSnapshot ds =
                                   snapShot.data.documents[index];
                               return CardItem(
-                                foodName: ds['food_name'],
+                                foodId: ds['food_id'],
                                 price: ds['unit_price'].toDouble(),
                                 quantity: ds['quantity'],
                                 onGoingCall: () => Navigator.of(context).push(
@@ -162,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                               DocumentSnapshot ds =
                                   snapShot.data.documents[index];
                               return CardItem(
-                                foodName: ds['food_name'],
+                                foodId: ds['food_id'],
                                 price: ds['unit_price'].toDouble(),
                                 quantity: ds['quantity'],
                                 isPending: true,
@@ -202,10 +199,10 @@ class CardItem extends StatelessWidget {
   final Function onGoingCall;
   final double price;
   final int quantity;
-  final String foodName;
+  final String foodId;
   const CardItem(
       {Key key,
-      this.foodName = '',
+      this.foodId = '',
       this.price = 0.0,
       this.quantity = 0,
       this.isPending = false,
@@ -215,8 +212,19 @@ class CardItem extends StatelessWidget {
       this.onGoingCall})
       : super(key: key);
 
+  Future<String> getImageUrl() async {
+    dynamic food =
+        await Firestore.instance.collection('food').document(this.foodId).get();
+    String imgUrl = food['imgUrl'];
+    String url;
+    url = await FirebaseStorage.instance.ref().child(imgUrl).getDownloadURL();
+
+    return url;
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(this.foodId);
     return GestureDetector(
       onTap: onGoingCall,
       child: Container(
@@ -230,27 +238,53 @@ class CardItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'assets/img/sampleFood.png',
-                    colorBlendMode: BlendMode.saturation,
-                    color: isPast ? Colors.black : Colors.transparent,
-                    height: 100,
-                    width: 100,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                FutureBuilder(
+                    future: getImageUrl(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<String> future_snapshot) {
+                      if (future_snapshot.hasData) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            future_snapshot.data,
+                            colorBlendMode: BlendMode.saturation,
+                            color: isPast ? Colors.black : Colors.transparent,
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        );
+                      }
+                      return ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Container(
+                            height: 100,
+                            width: 100,
+                            color: Colors.grey.shade200,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ));
+                    }),
                 Expanded(
                     child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          this.foodName,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
+                        FutureBuilder(
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) return Text('Loding..');
+                            return Text(
+                              snapshot.data['food_name'],
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            );
+                          },
+                          future: Firestore.instance
+                              .collection('food')
+                              .document(this.foodId)
+                              .get(),
                         ),
                         SizedBox(
                           height: 10,

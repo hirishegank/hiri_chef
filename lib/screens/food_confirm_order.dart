@@ -6,9 +6,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:user/screens/scan_page.dart';
 
 class OrderConfirmPage extends StatelessWidget {
-  const OrderConfirmPage({Key key, @required this.isPast, this.orderId})
+  const OrderConfirmPage(
+      {Key key, @required this.isPast, this.orderId, this.isPending = false})
       : super(key: key);
   final bool isPast;
+  final bool isPending;
   final String orderId;
 
   @override
@@ -226,7 +228,7 @@ class OrderConfirmPage extends StatelessWidget {
                               ],
                             ),
                           ),
-                          isPast
+                          isPast || isPending
                               ? SizedBox(
                                   width: 10,
                                 )

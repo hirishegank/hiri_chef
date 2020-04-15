@@ -169,7 +169,18 @@ class _HomePageState extends State<HomePage> {
                                 onAccpet: () => Firestore.instance
                                     .collection('orders')
                                     .document(ds.documentID)
-                                    .updateData({'status': 'on_going'}),
+                                    .updateData(
+                                  {'status': 'on_going'},
+                                ),
+                                onGoingCall: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => OrderConfirmPage(
+                                      orderId: ds.documentID,
+                                      isPast: false,
+                                      isPending: true,
+                                    ),
+                                  ),
+                                ),
                               );
                             });
                       },

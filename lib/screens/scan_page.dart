@@ -1,8 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
 
+import 'bottom_navigation.dart';
+
 class ScanPage extends StatefulWidget {
+  final String qrCode;
+  final String orderId;
+  ScanPage({this.qrCode, this.orderId});
   @override
   _ScanPageState createState() => _ScanPageState();
 }
@@ -14,6 +20,11 @@ class _ScanPageState extends State<ScanPage> {
     try {
       String barcode = await BarcodeScanner.scan();
       setState(() => this.barcode = barcode);
+      if (barcode == this.widget.qrCode) {
+        updateFirestoreStatus();
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => BottomNavigation()));
+      }
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
@@ -28,6 +39,13 @@ class _ScanPageState extends State<ScanPage> {
     } catch (e) {
       setState(() => this.barcode = 'Unknown error: $e');
     }
+  }
+
+  updateFirestoreStatus() {
+    Firestore.instance
+        .collection('orders')
+        .document(this.widget.orderId)
+        .updateData({'status': 'past'});
   }
 
   @override

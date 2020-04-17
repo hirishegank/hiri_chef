@@ -241,7 +241,11 @@ class OrderConfirmPage extends StatelessWidget {
                                           onTap: () => Navigator.of(context)
                                               .push(MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ScanPage())),
+                                                      ScanPage(
+                                                        qrCode: snapshot
+                                                            .data['qr_code'],
+                                                        orderId: this.orderId,
+                                                      ))),
                                           child: Container(
                                             decoration: BoxDecoration(
                                                 color: Colors.green,

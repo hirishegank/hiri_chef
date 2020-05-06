@@ -138,29 +138,8 @@ class _MenuDetailsPageState extends State<MenuDetailsPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => CookDetailsPage()));
-                          },
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'Cooked by ',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Muli',
-                                  fontSize: 20),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: 'Shan',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                          ),
-                        ),
                         RatingBarIndicator(
                           rating: snapShot.data['rating'],
                           direction: Axis.horizontal,

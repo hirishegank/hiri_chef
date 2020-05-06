@@ -84,26 +84,6 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => CookDetailsPage()));
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Cooked by ',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'Muli',
-                            fontSize: 20),
-                        children: <TextSpan>[
-                          TextSpan(
-                              text: 'Shan',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ),
-                  ),
                   Text(
                     'ratting...',
                   ),

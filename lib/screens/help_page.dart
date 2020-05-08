@@ -25,9 +25,6 @@ class HelpPage extends StatelessWidget {
             ProfileContentCard(
               lable: 'Hotline',
             ),
-            ProfileContentCard(
-              lable: 'Language',
-            ),
           ],
         ));
   }

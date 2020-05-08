@@ -135,11 +135,14 @@ class MenuCard extends StatelessWidget {
                   builder:
                       (BuildContext context, AsyncSnapshot<String> snapshot) {
                     if (snapshot.hasData) {
-                      return Image.network(
-                        snapshot.data,
-                        width: MediaQuery.of(context).size.width,
-                        height: 130,
-                        fit: BoxFit.cover,
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: Image.network(
+                          snapshot.data,
+                          width: MediaQuery.of(context).size.width,
+                          height: 130,
+                          fit: BoxFit.cover,
+                        ),
                       );
                     }
                     return Center(child: CircularProgressIndicator());
@@ -149,7 +152,7 @@ class MenuCard extends StatelessWidget {
               padding: EdgeInsets.all(10),
               child: Text(
                 this.foodName,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(
@@ -159,6 +162,7 @@ class MenuCard extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     'LKR ${price.toStringAsFixed(2)}',
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 15, color: Colors.grey),
                   ),
                   RatingBarIndicator(

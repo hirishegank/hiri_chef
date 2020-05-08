@@ -156,7 +156,7 @@ class OrderConfirmPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text('Delivery Type'),
-                                Text('Door step pickup')
+                                Text('Self pickup')
                               ],
                             ),
                           ),
@@ -201,7 +201,8 @@ class OrderConfirmPage extends StatelessWidget {
                               children: <Widget>[
                                 Text('Delivery Fee'),
                                 Text(
-                                    'LKR ${snapshot.data['delivery_fee'].toStringAsFixed(2)}')
+                                    // 'LKR ${snapshot.data['delivery_fee'].toStringAsFixed(2)}')
+                                    'LKR 150.00')
                               ],
                             ),
                           ),
@@ -220,7 +221,8 @@ class OrderConfirmPage extends StatelessWidget {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  'LKR ${(snapshot.data['delivery_fee'] + futureSnapshot.data['price'] * snapshot.data['quantity']).toStringAsFixed(2)}',
+                                  // 'LKR ${(snapshot.data['delivery_fee'] + futureSnapshot.data['price'] * snapshot.data['quantity']).toStringAsFixed(2)}',
+                                  'LKR ${(150 + futureSnapshot.data['price'] * snapshot.data['quantity']).toStringAsFixed(2)}',
                                   style: TextStyle(
                                       fontSize: 25,
                                       fontWeight: FontWeight.bold),

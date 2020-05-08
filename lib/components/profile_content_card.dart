@@ -1,4 +1,9 @@
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ProfileContentCard extends StatelessWidget {
   final Widget icon;
@@ -36,10 +41,36 @@ class ProfileContentCard extends StatelessWidget {
   }
 }
 
-class ProfileCard extends StatelessWidget {
+class ProfileCard extends StatefulWidget {
   const ProfileCard({
     Key key,
   }) : super(key: key);
+
+  @override
+  _ProfileCardState createState() => _ProfileCardState();
+}
+
+class _ProfileCardState extends State<ProfileCard> {
+  FirebaseUser _firebaseUser;
+  String userName = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    _firebaseUser = await FirebaseAuth.instance.currentUser();
+    final userDetails = await Firestore.instance
+        .collection('chef')
+        .document(_firebaseUser.uid)
+        .get();
+    setState(() {
+      userName = userDetails['name'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,16 +96,31 @@ class ProfileCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Gugsi',
+                this.userName,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: 5,
               ),
+              RatingBarIndicator(
+                rating: 4.3,
+                direction: Axis.horizontal,
+                itemCount: 5,
+                itemSize: 25,
+                unratedColor: Colors.green.shade100,
+                itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.green,
+                ),
+              ),
               Text(
-                'Joined 2 weeks ago',
+                '  Joined 2 weeks ago',
                 style: TextStyle(fontSize: 15),
-              )
+              ),
+              SizedBox(
+                height: 5,
+              ),
             ],
           ))
         ],

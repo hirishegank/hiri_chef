@@ -292,6 +292,7 @@ class CardItem extends StatelessWidget {
                             children: <Widget>[
                               Text(
                                 snapshot.data['food_name'],
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),

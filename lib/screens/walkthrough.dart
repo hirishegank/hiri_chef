@@ -3,6 +3,7 @@ import 'package:intro_slider/dot_animation_enum.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:user/screens/mobile_verification.dart';
+import 'package:user/screens/terms_screen.dart';
 
 class Walkthrough extends StatefulWidget {
   Walkthrough({Key key}) : super(key: key);
@@ -26,13 +27,13 @@ class _WalkthroughState extends State<Walkthrough> {
             color: Color(0xff3da4ab),
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
-            fontFamily: 'RobotoMono'),
+            fontFamily: 'Muli'),
         description: "Explore\n the\n food culture\n with\n Hiri’s Kitchen",
         styleDescription: TextStyle(
             color: Color(0xfffe9c8f),
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
-            fontFamily: 'Raleway'),
+            fontFamily: 'Muli'),
         pathImage: "assets/img/walk1.png",
       ),
     );
@@ -43,13 +44,13 @@ class _WalkthroughState extends State<Walkthrough> {
             color: Color(0xff3da4ab),
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
-            fontFamily: 'RobotoMono'),
+            fontFamily: 'Muli'),
         description: "Authentic\n food\n is on your\n Door step",
         styleDescription: TextStyle(
             color: Color(0xfffe9c8f),
             fontSize: 20.0,
             fontStyle: FontStyle.italic,
-            fontFamily: 'Raleway'),
+            fontFamily: 'Muli'),
         pathImage: "assets/img/walk2.png",
       ),
     );
@@ -60,13 +61,13 @@ class _WalkthroughState extends State<Walkthrough> {
             color: Color(0xff3da4ab),
             fontSize: 30.0,
             fontWeight: FontWeight.bold,
-            fontFamily: 'RobotoMono'),
+            fontFamily: 'Muli'),
         description: "Celebrate\n your\n ordered food !!",
         styleDescription: TextStyle(
             color: Color(0xfffe9c8f),
             fontSize: 40.0,
             fontStyle: FontStyle.italic,
-            fontFamily: 'Raleway'),
+            fontFamily: 'Muli'),
         pathImage: "assets/img/walk3.png",
       ),
     );
@@ -74,7 +75,7 @@ class _WalkthroughState extends State<Walkthrough> {
 
   void onDonePress() {
     Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => MobileVerificationPage()));
+        MaterialPageRoute(builder: (context) => TermsScreen()));
   }
 
   void onTabChangeCompleted(index) {
@@ -145,7 +146,7 @@ class _WalkthroughState extends State<Walkthrough> {
                       currentSlide.description,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'Pacifico',
+                        fontFamily: 'Muli',
                         fontWeight: FontWeight.w900,
                         fontSize: 45,
                         color: Colors.white,

@@ -98,6 +98,14 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
           lable: 'Text size',
         ),
         ProfileContentCard(
+          icon: FaIcon(FontAwesomeIcons.language),
+          lable: 'Language',
+        ),
+        ProfileContentCard(
+          icon: FaIcon(FontAwesomeIcons.facebook),
+          lable: 'Follow us',
+        ),
+        ProfileContentCard(
           icon: FaIcon(FontAwesomeIcons.signOutAlt),
           lable: 'Logout',
           onTap: () {

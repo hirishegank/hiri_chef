@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SettingsEditPage extends StatefulWidget {
@@ -6,16 +8,33 @@ class SettingsEditPage extends StatefulWidget {
 }
 
 class _SettingsEditPageState extends State<SettingsEditPage> {
-  String name = "Gusgi";
   String phoneNo = "+94 77 xxx xxxx";
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneNoController = TextEditingController();
 
+  FirebaseUser _firebaseUser;
+  String userName = '';
+
   @override
   void initState() {
-    nameController.text = name;
-    phoneNoController.text = phoneNo;
+    // TODO: implement initState
     super.initState();
+    getCurrentUser();
+
+    super.initState();
+  }
+
+  void getCurrentUser() async {
+    _firebaseUser = await FirebaseAuth.instance.currentUser();
+    final userDetails = await Firestore.instance
+        .collection('chef')
+        .document(_firebaseUser.uid)
+        .get();
+    setState(() {
+      userName = userDetails['name'];
+      nameController.text = userName;
+      phoneNoController.text = phoneNo;
+    });
   }
 
   @override

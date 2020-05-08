@@ -156,7 +156,7 @@ class OrderConfirmPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text('Delivery Type'),
-                                Text('Door step pickup')
+                                Text('Self pickup')
                               ],
                             ),
                           ),

@@ -16,6 +16,9 @@ class _ProfilePageState extends State<ProfilePage> {
   String name;
   String otherDetails;
   FirebaseUser _firebaseUser;
+  bool _isDoorStep = true;
+ 
+  String deliveryOption;
   final db = Firestore.instance;
 
   void getCurrentUser() async {
@@ -104,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         style: TextStyle(fontSize: 20),
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
-                            hintText: "Eg: Alergic", labelText: 'More Details'),
+                            hintText: "Eg: 36, Ramakrishna Road, Colombo 06", labelText: 'Address '),
                         onChanged: (value) {
                           otherDetails = value;
                           print(otherDetails);
@@ -112,8 +115,107 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     SizedBox(
-                      height: 40,
+                height: 10,
+              ),
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Text('Delivery Method'),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              
+              
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                              child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _isDoorStep = !_isDoorStep;
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.green),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: _isDoorStep
+                                    ? Icon(
+                                        Icons.check,
+                                        size: 30.0,
+                                        color: Colors.green,
+                                      )
+                                    : Icon(
+                                        Icons.check_box_outline_blank,
+                                        size: 30.0,
+                                        color: Colors.white,
+                                      ),
+                              ),
+                            ),
+                          )),
+                          Padding(
+                            padding: const EdgeInsets.only(left:10.0),
+                            child: Text('Door Step Pickup'),
+                          )
+                        ],
+                      ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                              child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                _isDoorStep = !_isDoorStep;
+                                this.deliveryOption = _isDoorStep
+                                    ? 'Door step pickup'
+                                    : 'Door Delivery';
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.green),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: !_isDoorStep
+                                    ? Icon(
+                                        Icons.check,
+                                        size: 30.0,
+                                        color: Colors.green,
+                                      )
+                                    : Icon(
+                                        Icons.check_box_outline_blank,
+                                        size: 30.0,
+                                        color: Colors.white,
+                                      ),
+                              ),
+                            ),
+                          )),
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text('Door Delivery'),
+                          )
+                        ],
+                      ),
+                    ),
+                    
+                    SizedBox(
+                      height: 30,
+                    ),
+              
                     BigButton(
                       text: 'Save',
                       onPressed: () {
